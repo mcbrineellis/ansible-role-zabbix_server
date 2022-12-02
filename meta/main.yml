@@ -1,0 +1,12 @@
+---
+galaxy_info:
+  role_name: zabbix_6_server
+  author: Connor McBrine-Ellis
+  description: A role for Ubuntu 20.04 that deploys and configures Zabbix 6.0 LTS with a PostgreSQL 13 DB backend
+  license: MIT
+  min_ansible_version: "2.4"
+
+  platforms:
+  - name: Ubuntu
+    versions:
+    - "all"

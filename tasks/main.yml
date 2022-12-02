@@ -1,0 +1,205 @@
+---
+- name: Install acl
+  ansible.builtin.package:
+    name: acl
+    state: present
+  become: true
+
+- name: Add signing key for Postgres repo to apt
+  ansible.builtin.apt_key:
+    keyserver: keyserver.ubuntu.com
+    id: b97b0afcaa1a47f044f244a07fcc7d46accc4cf8
+  become: true
+- name: Add Postgres repo to sources list
+  ansible.builtin.apt_repository: 
+    repo: deb http://apt.postgresql.org/pub/repos/apt/ {{ ansible_distribution_release }}-pgdg main
+    state: present
+  become: true
+- name: Update apt cache
+  ansible.builtin.apt:
+    update_cache: yes
+  become: true
+
+- name: Install PostgreSQL Server
+  ansible.builtin.include_role:
+    name: geerlingguy.postgresql
+    apply:
+      become: true
+  vars:
+    postgresql_version: 13
+    postgresql_packages:
+      - postgresql-13
+      - postgresql-contrib
+      - libpq-dev
+    postgresql_data_dir: "/var/lib/postgresql/13/main"
+    postgresql_bin_path: "/usr/lib/postgresql/13/bin"
+    postgresql_config_path: "/etc/postgresql/13/main"
+    postgresql_global_config_options:
+      - option: unix_socket_directories
+        value: '{{ postgresql_unix_socket_directories | join(",") }}'
+      - option: log_directory
+        value: 'log'
+      - option: max_connections
+        value: '{{ zabbix6_postgresql_max_connections }}'
+      - option: shared_buffers
+        value: '{{ zabbix6_postgresql_shared_buffers }}'
+      - option: effective_cache_size
+        value: '{{ zabbix6_postgresql_effective_cache_size }}'
+      - option: maintenance_work_mem
+        value: '{{ zabbix6_postgresql_maintenance_work_mem }}'
+      - option: checkpoint_completion_target
+        value: '{{ zabbix6_postgresql_checkpoint_completion_target }}'
+      - option: wal_buffers
+        value: '{{ zabbix6_postgresql_wal_buffers }}'
+      - option: default_statistics_target
+        value: '{{ zabbix6_postgresql_default_statistics_target }}'
+      - option: random_page_cost
+        value: '{{ zabbix6_postgresql_random_page_cost }}'
+      - option: effective_io_concurrency
+        value: '{{ zabbix6_postgresql_effective_io_concurrency }}'
+      - option: work_mem
+        value: '{{ zabbix6_postgresql_work_mem }}'
+      - option: min_wal_size
+        value: '{{ zabbix6_postgresql_min_wal_size }}'
+      - option: max_wal_size
+        value: '{{ zabbix6_postgresql_max_wal_size }}'
+      - option: max_worker_processes
+        value: '{{ zabbix6_postgresql_max_worker_processes }}'
+      - option: max_parallel_workers_per_gather
+        value: '{{ zabbix6_postgresql_max_parallel_workers_per_gather }}'
+      - option: max_parallel_workers
+        value: '{{ zabbix6_postgresql_max_parallel_workers }}'
+      - option: max_parallel_maintenance_workers
+        value: '{{ zabbix6_postgresql_max_parallel_maintenance_workers }}'
+
+- name: Install Zabbix Server
+  ansible.builtin.include_role:
+    name: community.zabbix.zabbix_server
+    apply:
+      become: true
+  vars:
+    zabbix_server_name: "{{ inventory_hostname }}"
+    zabbix_server_version: 6.0
+    zabbix_server_database: pgsql
+    zabbix_server_database_long: postgresql
+    zabbix_server_dbport: 5432
+    zabbix_server_dbname: zabbix
+    zabbix_server_dbuser: zabbix
+    zabbix_server_dbpassword: "{{ zabbix6_zabbix_server_dbpassword }}"
+    zabbix_server_cachesize: "{{ zabbix6_zabbix_server_cachesize }}"
+    zabbix_server_historycachesize: "{{ zabbix6_zabbix_server_historycachesize }}"
+    zabbix_server_historyindexcachesize: "{{ zabbix6_zabbix_server_historyindexcachesize }}"
+    zabbix_server_trendcachesize: "{{ zabbix6_zabbix_server_trendcachesize }}"
+    zabbix_server_trendfunctioncachesize: "{{ zabbix6_zabbix_server_trendfunctioncachesize }}"
+    zabbix_server_valuecachesize: "{{ zabbix6_zabbix_server_valuecachesize }}"
+    zabbix_server_vmwarecachesize: "{{ zabbix6_zabbix_server_vmwarecachesize }}"
+    zabbix_server_fpinglocation: "/usr/bin/fping"
+    zabbix_server_fping6location: "/usr/bin/fping6"
+    zabbix_server_startpollers: "{{ zabbix6_zabbix_server_startpollers }}"
+    zabbix_server_startlldprocessors: "{{ zabbix6_zabbix_server_startlldprocessors }}"
+    zabbix_server_startipmipollers: "{{ zabbix6_zabbix_server_startipmipollers }}"
+    zabbix_server_startpollersunreachable: "{{ zabbix6_zabbix_server_startpollersunreachable }}"
+    zabbix_server_starttrappers: "{{ zabbix6_zabbix_server_starttrappers }}"
+    zabbix_server_startpingers: "{{ zabbix6_zabbix_server_startpingers }}"
+    zabbix_server_startdiscoverers: "{{ zabbix6_zabbix_server_startdiscoverers }}"
+    zabbix_server_starthttppollers: "{{ zabbix6_zabbix_server_starthttppollers }}"
+    zabbix_server_startpreprocessors: "{{ zabbix6_zabbix_server_startpreprocessors }}"
+    zabbix_server_startodbcpollers: "{{ zabbix6_zabbix_server_startodbcpollers }}"
+    zabbix_server_starttimers: "{{ zabbix6_zabbix_server_starttimers }}"
+    zabbix_server_starthistorypollers: "{{ zabbix6_zabbix_server_starthistorypollers }}"
+    zabbix_server_startjavapollers: "{{ zabbix6_zabbix_server_startjavapollers }}"
+    zabbix_server_startvmwarecollectors: "{{ zabbix6_zabbix_server_startvmwarecollectors }}"
+    zabbix_server_startsnmptrapper: "{{ zabbix6_zabbix_server_startsnmptrapper }}"
+    zabbix_server_startdbsyncers: "{{ zabbix6_zabbix_server_startdbsyncers }}"
+    zabbix_server_startproxypollers: "{{ zabbix6_zabbix_server_startproxypollers }}"
+    zabbix_server_startescalators: "{{ zabbix6_zabbix_server_startescalators }}"
+    zabbix_server_startreportwriters: "{{ zabbix6_zabbix_server_startreportwriters }}"
+    zabbix_server_webserviceurl: "http://{{ inventory_hostname }}:10053/report"
+
+- name: Install php-fpm
+  apt:
+    name: php-fpm
+    state: present
+  become: true
+
+- name: Install the Apache web server
+  apt:
+    name: apache2
+    state: present
+  become: true
+
+- name: Enable the Apache2 module mod_rewrite
+  community.general.apache2_module:
+    name: rewrite
+    state: present
+  become: true
+
+- name: Disable the default Apache2 site
+  ansible.builtin.shell: a2dissite 000-default
+  become: true
+  notify:
+    - restart apache
+
+- name: Install Zabbix Web Frontend
+  ansible.builtin.include_role:
+    name: community.zabbix.zabbix_web
+    apply:
+      become: true
+  vars:
+    zabbix_server_name: "{{ inventory_hostname }}"
+    zabbix_web_version: 6.0
+    zabbix_api_server_url: "{{ inventory_hostname }}"
+    zabbix_server_database: pgsql
+    zabbix_server_database_long: postgresql
+    zabbix_server_dbport: 5432
+    zabbix_server_dbname: zabbix
+    zabbix_server_dbuser: zabbix
+    zabbix_server_dbpassword: "{{ zabbix6_zabbix_server_dbpassword }}"
+    zabbix_timezone: "{{ zabbix6_zabbix_timezone }}"
+
+- name: Install zabbix-web-service
+  apt:
+    name: zabbix-web-service
+    state: present
+  become: true
+
+- name: Add signing key for Google Chrome repo to apt
+  apt_key:
+    url: https://dl.google.com/linux/linux_signing_key.pub
+    id: 4CCA1EAF950CEE4AB83976DCA040830F7FAC5991
+  become: true
+
+- name: Add Google Chrome repo to sources list
+  apt_repository:
+    repo: "deb http://dl.google.com/linux/chrome/deb/ stable main"
+    state: present
+  become: true
+
+- name: Install google-chrome-stable
+  apt:
+    name:
+      - google-chrome-stable
+    update_cache: yes
+  become: true
+
+- name: Install Zabbix Agent
+  ansible.builtin.include_role:
+    name: community.zabbix.zabbix_agent
+    apply:
+      become: true
+  vars:
+    zabbix_agent_version: 6.0
+    zabbix_agent_server: 127.0.0.1
+    zabbix_agent_serveractive: 127.0.0.1
+
+- name: Install pip3
+  apt:
+    name: python3-pip
+    state: present
+  become: true
+
+- name: Install zabbix-api python library
+  pip:  
+    name: zabbix-api
+
+- meta: flush_handlers

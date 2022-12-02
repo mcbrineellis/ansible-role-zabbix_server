@@ -1,0 +1,47 @@
+---
+# variable default values
+zabbix6_zabbix_timezone: America/Toronto
+zabbix6_zabbix_server_dbpassword: zabbix
+zabbix6_zabbix_server_cachesize: 256M
+zabbix6_zabbix_server_historycachesize: 256M
+zabbix6_zabbix_server_historyindexcachesize: 128M
+zabbix6_zabbix_server_trendcachesize: 128M
+zabbix6_zabbix_server_trendfunctioncachesize: 128M
+zabbix6_zabbix_server_valuecachesize: 256M
+zabbix6_zabbix_server_vmwarecachesize: 128M
+zabbix6_zabbix_server_startpollers: 10
+zabbix6_zabbix_server_startlldprocessors: 2
+zabbix6_zabbix_server_startipmipollers: 0
+zabbix6_zabbix_server_startpollersunreachable: 1
+zabbix6_zabbix_server_starttrappers: 5
+zabbix6_zabbix_server_startpingers: 1
+zabbix6_zabbix_server_startdiscoverers: 1
+zabbix6_zabbix_server_starthttppollers: 1
+zabbix6_zabbix_server_startpreprocessors: 3
+zabbix6_zabbix_server_startodbcpollers: 1
+zabbix6_zabbix_server_starttimers: 1
+zabbix6_zabbix_server_starthistorypollers: 5
+zabbix6_zabbix_server_startjavapollers: 5
+zabbix6_zabbix_server_startvmwarecollectors: 10
+zabbix6_zabbix_server_startsnmptrapper: 1
+zabbix6_zabbix_server_startdbsyncers: 4
+zabbix6_zabbix_server_startproxypollers: 1
+zabbix6_zabbix_server_startescalators: 1
+zabbix6_zabbix_server_startreportwriters: 0
+# default postgresql settings optimized for 4 vCPU, 8 GB RAM, 200 connections
+zabbix6_postgresql_max_connections: 200
+zabbix6_postgresql_shared_buffers: 2GB
+zabbix6_postgresql_effective_cache_size: 6GB
+zabbix6_postgresql_maintenance_work_mem: 512MB
+zabbix6_postgresql_checkpoint_completion_target: 0.9
+zabbix6_postgresql_wal_buffers: 16MB
+zabbix6_postgresql_default_statistics_target: 100
+zabbix6_postgresql_random_page_cost: 1.1
+zabbix6_postgresql_effective_io_concurrency: 200
+zabbix6_postgresql_work_mem: 2621kB
+zabbix6_postgresql_min_wal_size: 1GB
+zabbix6_postgresql_max_wal_size: 4GB
+zabbix6_postgresql_max_worker_processes: 4
+zabbix6_postgresql_max_parallel_workers_per_gather: 2
+zabbix6_postgresql_max_parallel_workers: 4
+zabbix6_postgresql_max_parallel_maintenance_workers: 2
