@@ -166,7 +166,7 @@
 - name: Configure Zabbix Web Service
   template:
     src: zabbix_web_service.conf.j2
-    dest: /etc/zabbix
+    dest: /etc/zabbix/zabbix_web_service.conf
     owner: root
     group: root
     mode: 0644
