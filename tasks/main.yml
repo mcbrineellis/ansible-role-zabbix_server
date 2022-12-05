@@ -157,11 +157,22 @@
     zabbix_server_dbpassword: "{{ zabbix6_zabbix_server_dbpassword }}"
     zabbix_timezone: "{{ zabbix6_zabbix_timezone }}"
 
-- name: Install zabbix-web-service
+- name: Install Zabbix Web Service
   apt:
     name: zabbix-web-service
     state: present
   become: true
+
+- name: Configure Zabbix Web Service
+  template:
+    src: zabbix_web_service.conf.j2
+    dest: /etc/zabbix
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - restart zabbix-server
+    - restart zabbix-web-service
 
 - name: Add signing key for Google Chrome repo to apt
   apt_key:

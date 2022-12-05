@@ -5,3 +5,15 @@
     daemon_reload: yes
     name: apache2
   become: yes
+- name: restart zabbix-server
+  systemd:
+    state: restarted
+    daemon_reload: yes
+    name: zabbix-server
+  become: yes
+- name: restart zabbix-web-service
+  systemd:
+    state: restarted
+    daemon_reload: yes
+    name: zabbix-web-service
+  become: yes
