@@ -173,6 +173,7 @@
   notify:
     - restart zabbix-server
     - restart zabbix-web-service
+  become: true
 
 - name: Add signing key for Google Chrome repo to apt
   apt_key:
