@@ -156,6 +156,7 @@
     zabbix_server_dbuser: zabbix
     zabbix_server_dbpassword: "{{ zabbix6_zabbix_server_dbpassword }}"
     zabbix_timezone: "{{ zabbix6_zabbix_timezone }}"
+    zabbix_web_memory_limit: "{{ zabbix6_zabbix_web_memory_limit }}"
 
 - name: Install Zabbix Web Service
   apt:

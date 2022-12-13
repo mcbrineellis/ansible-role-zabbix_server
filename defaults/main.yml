@@ -28,6 +28,7 @@ zabbix6_zabbix_server_startdbsyncers: 4
 zabbix6_zabbix_server_startproxypollers: 1
 zabbix6_zabbix_server_startescalators: 1
 zabbix6_zabbix_server_startreportwriters: 3
+zabbix6_zabbix_web_memory_limit: 512M
 # default postgresql settings optimized for 4 vCPU, 8 GB RAM, 200 connections
 zabbix6_postgresql_max_connections: 200
 zabbix6_postgresql_shared_buffers: 2GB
